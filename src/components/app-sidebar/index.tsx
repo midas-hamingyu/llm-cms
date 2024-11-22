@@ -15,12 +15,12 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         {groups.map((group) => (
-          <SidebarGroup>
+          <SidebarGroup key={group.key}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item.key}>
                     <SidebarMenuButton
                       onClick={() => {
                         console.log(item.title);

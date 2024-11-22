@@ -16,6 +16,7 @@ export enum SIDEBAR_MENU {
 
 export const groups = [
   {
+    key: 'MANAGE_DATA',
     title: '데이터 관리',
     items: [
       {
@@ -36,6 +37,7 @@ export const groups = [
     ],
   },
   {
+    key: 'MANAGE_JSON',
     title: 'json 관리',
     items: [
       {
