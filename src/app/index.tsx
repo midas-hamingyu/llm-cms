@@ -1,8 +1,13 @@
 import './index.css';
 import Layout from '@/app/layout';
+import { Route } from '@/app/route.tsx';
 
 function App() {
-  return <Layout>안녕</Layout>;
+  return (
+    <Layout>
+      <Route />
+    </Layout>
+  );
 }
 
 export default App;
