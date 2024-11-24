@@ -7,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/@ui/sidebar.tsx';
+} from '@/components/ui/sidebar.tsx';
 import {
   groups,
   SIDEBAR_MENU,
