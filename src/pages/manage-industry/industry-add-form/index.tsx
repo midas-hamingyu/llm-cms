@@ -19,16 +19,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card.tsx';
+import { useIndustriesActions } from '@/pages/manage-industry/model/industries.store.ts';
 import { cn } from '@/lib/utils.ts';
 
 const formSchema = z.object({
   name: z.string().min(1, '업종명을 입력해주세요.'),
-  keywords: z
-    .string()
-    .transform((val) => val.split(',').map((keyword) => keyword.trim()))
-    .refine((arr) => arr.length > 0 && arr.every((kw) => kw.length > 0), {
-      message: '유효한 키워드를 입력해주세요.',
-    }),
+  keywords: z.string().optional(),
 });
 
 export function IndustryAddForm() {
@@ -36,13 +32,30 @@ export function IndustryAddForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      keywords: [],
+      keywords: '',
     },
   });
   const { handleSubmit, control, reset } = form;
+  const { addIndustry } = useIndustriesActions();
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log('폼 데이터:', data);
+    const formattedKeywords =
+      data.keywords
+        ?.split(',')
+        .map((keyword) => keyword.trim())
+        .filter((keyword) => keyword.length > 0) // 빈 키워드 제거
+        .reduce<string[]>(
+          (uniqueKeywords, keyword) =>
+            uniqueKeywords.includes(keyword)
+              ? uniqueKeywords
+              : [...uniqueKeywords, keyword],
+          [],
+        ) || []; // 중복 제거 및 빈 키워드 대비 안전 처리
+
+    addIndustry({
+      name: data.name,
+      feelingKeywords: formattedKeywords,
+    });
     reset();
   };
 
@@ -77,7 +90,7 @@ export function IndustryAddForm() {
               name="keywords"
               render={({ field }) => (
                 <FormItem className={cn('flex flex-col space-y-1.5')}>
-                  <FormLabel htmlFor="keywords">키워드</FormLabel>
+                  <FormLabel htmlFor="keywords">느낌 키워드</FormLabel>
                   <FormControl>
                     <Input
                       id="keywords"
