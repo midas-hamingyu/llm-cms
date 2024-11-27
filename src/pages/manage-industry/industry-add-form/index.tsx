@@ -104,7 +104,7 @@ export function IndustryAddForm() {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit">제출</Button>
+            <Button type="submit">추가</Button>
           </CardFooter>
         </form>
       </Form>

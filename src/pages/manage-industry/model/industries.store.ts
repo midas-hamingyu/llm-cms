@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Industry } from '@/pages/manage-industry/model/industry.ts';
-
 type StateType = {
   industries: Industry[];
 };
@@ -8,10 +7,11 @@ type StateType = {
 type ActionsType = {
   addIndustry: (newIndustry: Industry) => void;
   removeIndustry: (industryName: string) => void;
+  getIndustryByName: (industryName: string) => Industry | undefined;
 };
 
 const useIndustriesStore = create<StateType & { actions: ActionsType }>(
-  (set) => ({
+  (set, get) => ({
     industries: [],
     actions: {
       addIndustry: (newIndustry) => {
@@ -30,11 +30,16 @@ const useIndustriesStore = create<StateType & { actions: ActionsType }>(
           };
         });
       },
+      getIndustryByName: (industryName) => {
+        const { industries } = get();
+        return industries.find((industry) => industry.name === industryName);
+      },
     },
   }),
 );
 
 export const useIndustries = () =>
   useIndustriesStore((state) => state.industries);
+
 export const useIndustriesActions = () =>
   useIndustriesStore((state) => state.actions);
