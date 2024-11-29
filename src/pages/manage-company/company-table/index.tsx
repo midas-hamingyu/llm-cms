@@ -20,10 +20,18 @@ import {
   useCompanies,
   useCompaniesActions,
 } from '@/pages/manage-company/model/companies.store.ts';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip.tsx';
+import { useIndustriesActions } from '@/pages/manage-industry/model/industries.store.ts';
 
 export function CompanyTable() {
   const companies = useCompanies();
   const { removeCompany } = useCompaniesActions();
+  const { getIndustryByName } = useIndustriesActions();
   return (
     <Card className={cn('mt-5')}>
       <CardHeader>
@@ -48,9 +56,24 @@ export function CompanyTable() {
                 <TableCell className={cn('w-full')}>
                   <div className={cn('flex flex-wrap gap-1')}>
                     {company.industries.map((industry) => (
-                      <Badge variant="outline" key={industry}>
-                        {industry}
-                      </Badge>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger
+                            className={cn('cursor-help')}
+                            onClick={(e) => e.preventDefault()}>
+                            <Badge variant="outline" key={industry}>
+                              {industry}
+                            </Badge>
+                          </TooltipTrigger>
+                          {getIndustryByName(industry) && (
+                            <TooltipContent align={'start'}>
+                              {getIndustryByName(
+                                industry,
+                              )?.feelingKeywords.join(', ')}
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
                     ))}
                   </div>
                 </TableCell>

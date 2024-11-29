@@ -33,6 +33,12 @@ import { Industry } from '@/pages/manage-industry/model/industry.ts';
 import { Checkbox } from '@/components/ui/checkbox.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { useCompaniesActions } from '@/pages/manage-company/model/companies.store.ts';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip.tsx';
 
 const formSchema = z.object({
   name: z.string().min(1, '회사명을 입력해주세요.'),
@@ -111,15 +117,31 @@ export function CompanyAddForm() {
                         variant="outline"
                         className={cn('w-full justify-start')}>
                         {selectedIndustries.length > 0 ? (
-                          <div>
+                          <div className={cn('flex gap-1')}>
                             {selectedIndustries
                               .map(getIndustryByName)
                               .filter(
                                 (industry): industry is Industry =>
                                   industry !== undefined,
                               )
-                              .map((industry) => industry.name)
-                              .join(', ')}
+                              .map((industry) => (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger
+                                      onClick={(e) => e.preventDefault()}>
+                                      <Badge
+                                        className={cn('cursor-help')}
+                                        variant="outline"
+                                        key={industry.name}>
+                                        {industry.name}
+                                      </Badge>
+                                    </TooltipTrigger>
+                                    <TooltipContent align={'start'}>
+                                      {industry.feelingKeywords.join(', ')}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              ))}
                           </div>
                         ) : thereIsNoIndustry ? (
                           '선택할 수 있는 업종이 없습니다.'
