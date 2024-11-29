@@ -39,6 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip.tsx';
+import { ScrollArea } from '@/components/ui/scroll-area.tsx';
 
 const formSchema = z.object({
   name: z.string().min(1, '회사명을 입력해주세요.'),
@@ -60,6 +61,7 @@ export function CompanyAddForm() {
   const { handleSubmit, control, reset, setValue, watch } = form;
 
   const selectedIndustries = watch('industries') || [];
+  const thereAreSelectedIndustries = selectedIndustries.length > 0;
 
   const toggleIndustry = (industry: string) => {
     if (selectedIndustries.includes(industry)) {
@@ -115,8 +117,11 @@ export function CompanyAddForm() {
                     <PopoverTrigger asChild disabled={thereIsNoIndustry}>
                       <Button
                         variant="outline"
-                        className={cn('w-full justify-start')}>
-                        {selectedIndustries.length > 0 ? (
+                        className={cn(
+                          'w-full justify-start',
+                          !thereAreSelectedIndustries && 'text-gray-500/90',
+                        )}>
+                        {thereAreSelectedIndustries ? (
                           <div className={cn('flex gap-1')}>
                             {selectedIndustries
                               .map(getIndustryByName)
@@ -151,35 +156,37 @@ export function CompanyAddForm() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent align="start" className={cn('p-1 w-fit')}>
-                      <div className={cn('grid')}>
-                        {industries.map((industry) => (
-                          <div
-                            key={industry.name}
-                            onClick={() => toggleIndustry(industry.name)}
-                            className={cn(
-                              'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 hover:cursor-pointer',
-                            )}>
-                            <Checkbox
-                              checked={selectedIndustries.includes(
-                                industry.name,
-                              )}
-                            />
-                            <label
+                      <ScrollArea className="max-h-[208px] overflow-auto">
+                        <div className={cn('grid pr-3')}>
+                          {industries.map((industry) => (
+                            <div
+                              key={industry.name}
+                              onClick={() => toggleIndustry(industry.name)}
                               className={cn(
-                                'flex gap-3 text-sm font-medium hover:cursor-pointer',
+                                'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 hover:cursor-pointer',
                               )}>
-                              {industry.name}
-                              <div className={cn('flex gap-1')}>
-                                {industry.feelingKeywords.map((keyword) => (
-                                  <Badge variant="outline" key={keyword}>
-                                    {keyword}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                              <Checkbox
+                                checked={selectedIndustries.includes(
+                                  industry.name,
+                                )}
+                              />
+                              <label
+                                className={cn(
+                                  'flex gap-3 text-sm font-medium hover:cursor-pointer',
+                                )}>
+                                {industry.name}
+                                <div className={cn('flex gap-1')}>
+                                  {industry.feelingKeywords.map((keyword) => (
+                                    <Badge variant="outline" key={keyword}>
+                                      {keyword}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
