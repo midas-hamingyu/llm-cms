@@ -26,7 +26,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover.tsx';
 import { ScrollArea } from '@/components/ui/scroll-area.tsx';
-import { useCompanies } from '@/pages/manage-company/model/companies.store.ts';
+import {
+  useCompanies,
+  useCompaniesActions,
+} from '@/pages/manage-company/model/companies.store.ts';
 import { useState } from 'react';
 import { useTemplatesActions } from '@/pages/manage-template/model/templates.store.ts';
 import { useIndustriesActions } from '@/pages/manage-industry/model/industries.store.ts';
@@ -43,6 +46,7 @@ const formSchema = z.object({
 
 export function TemplateAddForm() {
   const companies = useCompanies();
+  const { getCompanyByName } = useCompaniesActions();
   const thereIsNoCompany = companies.length === 0;
   const { addTemplate } = useTemplatesActions();
   const { getIndustryByName } = useIndustriesActions();
@@ -59,7 +63,9 @@ export function TemplateAddForm() {
     useState<boolean>(false);
   const { handleSubmit, control, reset, setValue, watch } = form;
 
-  const selectedCompany = watch('companyName');
+  const selectedCompanyName = watch('companyName');
+  const selectedCompany = getCompanyByName(selectedCompanyName);
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     const formattedTypeKeywords =
       data.typeKeywords
@@ -143,11 +149,22 @@ export function TemplateAddForm() {
                         variant="outline"
                         className={cn(
                           'w-full justify-start',
-                          !selectedCompany && 'text-gray-500/90',
+                          !selectedCompanyName && 'text-gray-500/90',
                         )}>
                         {selectedCompany ? (
-                          <div className={cn('flex gap-1')}>
-                            {selectedCompany}
+                          <div className={cn('flex gap-3')}>
+                            {selectedCompany.name}
+                            <div className={cn('flex gap-1')}>
+                              {selectedCompany.industries
+                                .map(getIndustryByName)
+                                .filter(
+                                  (industry): industry is Industry =>
+                                    industry !== undefined,
+                                )
+                                .map((industry) => (
+                                  <IndustryBadge industry={industry} />
+                                ))}
+                            </div>
                           </div>
                         ) : thereIsNoCompany ? (
                           '선택할 수 있는 회사가 없습니다.'
@@ -170,7 +187,7 @@ export function TemplateAddForm() {
                                 className={cn(
                                   'flex items-center gap-3 text-sm font-medium hover:cursor-pointer',
                                 )}>
-                                {company.name === selectedCompany && (
+                                {company.name === selectedCompanyName && (
                                   <Check size={16} />
                                 )}
                                 {company.name}
