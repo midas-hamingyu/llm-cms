@@ -14,19 +14,14 @@ import {
   CardTitle,
 } from '@/components/ui/card.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Badge } from '@/components/ui/badge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import {
   useCompanies,
   useCompaniesActions,
 } from '@/pages/manage-company/model/companies.store.ts';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
 import { useIndustriesActions } from '@/pages/manage-industry/model/industries.store.ts';
+import { Industry } from '@/pages/manage-industry/model/industry.ts';
+import { IndustryBadge } from '@/components/industry/IndustryBadge.tsx';
 
 export function CompanyTable() {
   const companies = useCompanies();
@@ -55,26 +50,18 @@ export function CompanyTable() {
                 </TableCell>
                 <TableCell className={cn('w-full')}>
                   <div className={cn('flex flex-wrap gap-1')}>
-                    {company.industries.map((industry) => (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger
-                            className={cn('cursor-help')}
-                            onClick={(e) => e.preventDefault()}>
-                            <Badge variant="outline" key={industry}>
-                              {industry}
-                            </Badge>
-                          </TooltipTrigger>
-                          {getIndustryByName(industry) && (
-                            <TooltipContent align={'start'}>
-                              {getIndustryByName(
-                                industry,
-                              )?.feelingKeywords.join(', ')}
-                            </TooltipContent>
-                          )}
-                        </Tooltip>
-                      </TooltipProvider>
-                    ))}
+                    {company.industries
+                      .map(getIndustryByName)
+                      .filter(
+                        (industry): industry is Industry =>
+                          industry !== undefined,
+                      )
+                      .map((industry) => (
+                        <IndustryBadge
+                          key={industry.name}
+                          industry={industry}
+                        />
+                      ))}
                   </div>
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-right">

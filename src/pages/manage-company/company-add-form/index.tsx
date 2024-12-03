@@ -33,13 +33,8 @@ import { Industry } from '@/pages/manage-industry/model/industry.ts';
 import { Checkbox } from '@/components/ui/checkbox.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { useCompaniesActions } from '@/pages/manage-company/model/companies.store.ts';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
 import { ScrollArea } from '@/components/ui/scroll-area.tsx';
+import { IndustryBadge } from '@/components/industry/IndustryBadge.tsx';
 
 const formSchema = z.object({
   name: z.string().min(1, '회사명을 입력해주세요.'),
@@ -130,22 +125,10 @@ export function CompanyAddForm() {
                                   industry !== undefined,
                               )
                               .map((industry) => (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger
-                                      onClick={(e) => e.preventDefault()}>
-                                      <Badge
-                                        className={cn('cursor-help')}
-                                        variant="outline"
-                                        key={industry.name}>
-                                        {industry.name}
-                                      </Badge>
-                                    </TooltipTrigger>
-                                    <TooltipContent align={'start'}>
-                                      {industry.feelingKeywords.join(', ')}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
+                                <IndustryBadge
+                                  key={industry.name}
+                                  industry={industry}
+                                />
                               ))}
                           </div>
                         ) : thereIsNoIndustry ? (
