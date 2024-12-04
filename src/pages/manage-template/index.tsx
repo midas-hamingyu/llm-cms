@@ -1,12 +1,11 @@
 import { TemplateAddForm } from '@/pages/manage-template/template-add-form';
-import { useTemplates } from '@/pages/manage-template/model/templates.store.ts';
+import { TemplateTable } from '@/pages/manage-template/template-table';
 
 export function ManageTemplatePage() {
-  const templates = useTemplates();
-  console.log(templates);
   return (
     <>
       <TemplateAddForm />
+      <TemplateTable />
     </>
   );
 }
