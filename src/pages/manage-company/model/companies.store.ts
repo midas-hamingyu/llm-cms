@@ -5,6 +5,7 @@ type StateType = {
 };
 
 type ActionsType = {
+  initCompanies: (companies: Company[]) => void;
   addCompany: (newCompany: Company) => void;
   removeCompany: (companyName: string) => void;
   getCompanyByName: (companyName: string) => Company | undefined;
@@ -14,6 +15,9 @@ const useCompaniesStore = create<StateType & { actions: ActionsType }>(
   (set, get) => ({
     companies: [],
     actions: {
+      initCompanies: (companies) => {
+        set({ companies });
+      },
       addCompany: (newCompany) => {
         set((state) => {
           return {

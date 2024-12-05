@@ -6,6 +6,7 @@ type StateType = {
 };
 
 type ActionsType = {
+  initTemplates: (templates: Template[]) => void;
   addTemplate: (newTemplate: Template) => void;
   removeTemplate: (templateSn: number) => void;
 };
@@ -14,6 +15,9 @@ const useTemplatesStore = create<StateType & { actions: ActionsType }>(
   (set) => ({
     templates: [],
     actions: {
+      initTemplates: (templates) => {
+        set({ templates });
+      },
       addTemplate: (newTemplate) => {
         set((state) => {
           return {

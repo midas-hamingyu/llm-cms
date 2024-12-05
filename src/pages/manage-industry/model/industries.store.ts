@@ -5,6 +5,7 @@ type StateType = {
 };
 
 type ActionsType = {
+  initIndustries: (industries: Industry[]) => void;
   addIndustry: (newIndustry: Industry) => void;
   removeIndustry: (industryName: string) => void;
   getIndustryByName: (industryName: string) => Industry | undefined;
@@ -14,6 +15,9 @@ const useIndustriesStore = create<StateType & { actions: ActionsType }>(
   (set, get) => ({
     industries: [],
     actions: {
+      initIndustries: (industries) => {
+        set({ industries });
+      },
       addIndustry: (newIndustry) => {
         set((state) => {
           return {
