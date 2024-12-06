@@ -9,10 +9,12 @@ type ActionsType = {
   initTemplates: (templates: Template[]) => void;
   addTemplate: (newTemplate: Template) => void;
   removeTemplate: (templateSn: number) => void;
+  updateTemplate: (updatedTemplate: Template) => void;
+  getTemplateBySn: (templateSn: number) => Template | undefined;
 };
 
 const useTemplatesStore = create<StateType & { actions: ActionsType }>(
-  (set) => ({
+  (set, get) => ({
     templates: [],
     actions: {
       initTemplates: (templates) => {
@@ -33,6 +35,20 @@ const useTemplatesStore = create<StateType & { actions: ActionsType }>(
             ),
           };
         });
+      },
+      updateTemplate: (updatedTemplate) => {
+        set((state) => ({
+          templates: state.templates.map((template) =>
+            template.templateSn === updatedTemplate.templateSn
+              ? updatedTemplate
+              : template,
+          ),
+        }));
+      },
+      getTemplateBySn: (templateSn) => {
+        return get().templates.find(
+          (template) => template.templateSn === templateSn,
+        );
       },
     },
   }),

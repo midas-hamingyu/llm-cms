@@ -81,7 +81,7 @@ export function TemplateAddForm() {
         ) || []; // 중복 제거 및 빈 키워드 대비 안전 처리
 
     const formattedfeelingKeywords =
-      data.typeKeywords
+      data.feelingKeywords
         ?.split(',')
         .map((keyword) => keyword.trim())
         .filter((keyword) => keyword.length > 0) // 빈 키워드 제거
@@ -98,6 +98,7 @@ export function TemplateAddForm() {
       companyName: data.companyName,
       typeKeywords: formattedTypeKeywords,
       feelingKeywords: formattedfeelingKeywords,
+      pages: [],
     });
     reset();
   };
